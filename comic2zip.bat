@@ -1,2 +1,2 @@
-python "epub2zip.py" %*
+python "comic2zip.py" %*
 pause
