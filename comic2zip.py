@@ -42,7 +42,7 @@ def process(f):
                 sub_num = 1
                 for img in html.find_all('img'):
                     img_path = html_path / '../' / img.get('src')
-                    zipf.write(img_path, "{:0>4}_{}{}".format(img_num, sub_num, img_path.suffix))
+                    zipf.write(img_path.resolve(), "{:0>4}_{}{}".format(img_num, sub_num, img_path.suffix))
                     sub_num += 1
 
 init()
