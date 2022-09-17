@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 import sys
 import zipfile
+import os
 
 def unzip(file, target):
     with zipfile.ZipFile(file, 'r') as zf:
@@ -44,23 +45,42 @@ def process(f):
                     img_path = html_path / '../' / img.get('src')
                     zipf.write(img_path.resolve(), "{:0>4}_{}{}".format(img_num, sub_num, img_path.suffix))
                     sub_num += 1
+                    
+def get_epubs(path):
+    _, _, filenames = next(os.walk(path), (None, None, []))
+    epubs = [f for f in filenames if f.endswith('.epub')]
+    return epubs
 
-init()
-files = sys.argv[1:]
-if len(files) == 0:
-    input_ = input("Please input file name(split with space):")
-    input_ = input_.split(" ")
-    for file in input_:
-        if file != '':
-            files.append(file)
-
-for file in files:
+def processfile(path):
     print('-----------------------------------------')
-    print(f'Process file "{file}" ...')
+    print(f'Process file "{path}" ...')
     try:
-        f = open(file)
+        f = open(path)
     except IOError:
-        print(f'{Fore.RED}File "{file}" is not accessible.{Fore.RESET}')
+        print(f'{Fore.RED}File "{path}" is not accessible.{Fore.RESET}')
     else:
         f.close()
-        process(file)
+        process(path)
+
+def trim_quotes(string):
+    if string.startswith(('"', "'")) and string.endswith(('"', "'")):
+        string = string[1:-1]
+    return string
+
+init()
+paths = sys.argv[1:]
+if len(paths) == 0:
+    input_ = input("Please input file name(split with space):")
+    input_ = input_.split(" ")
+    for path in input_:
+        path = trim_quotes(path)
+        if path != '':
+            paths.append(path)
+
+for path in paths:
+    if os.path.isdir(path):
+        files = get_epubs(path)
+        for file in files:
+            processfile(os.path.join(path, file))
+    else:
+        processfile(path)
