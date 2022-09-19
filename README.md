@@ -9,5 +9,5 @@ This script only support python3
 pip install beautifulsoup4 colorama tqdm lxml
 ```
 ### Enjoy it
-* Drag file to comic2zip.bat (suggest)
-* Or use `python comic2zip.py {filename}`
+* Drag file or folder contains epubs to comic2zip.bat (suggest)
+* Or use `python comic2zip.py {filename | pathname}`
